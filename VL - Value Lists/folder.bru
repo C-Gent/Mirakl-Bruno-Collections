@@ -11,6 +11,14 @@ auth:bearer {
   token: {{MIRAKL_FR_BEARER_TOKEN}}
 }
 
+vars:pre-request {
+  VL_IMPORT_ID: 
+}
+
 vars:post-response {
   VL_IMPORT_ID: 
+  VL02_STATUS: 
+  VL03_IMPORT_ID: 
+  VL03_ERROR_CSV: 
+  VL02_HARD_FAILURE: 
 }

@@ -1,0 +1,33 @@
+meta {
+  name: VL03 - Get the error report file for a value list import
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{MIRAKL_BASE_URL}}/api/values_lists/imports/{{VL03_IMPORT_ID}}/error_report
+  body: none
+  auth: inherit
+}
+
+script:post-response {
+  // VL03 returns CSV as plain text
+  const csv = res.body;
+  
+  // Log the CSV for debugging
+  console.log("VL03 Error Report CSV:\n", csv);
+  
+  // Store the CSV in a variable (optional)
+  bru.setVar("VL03_ERROR_CSV", csv);
+  
+}
+
+tests {
+  assert(res.status === 200);
+  assert(res.body.length > 0);
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
