@@ -1,0 +1,39 @@
+meta {
+  name: VL01 - Send a file to create, update, or delete value lists
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{MIRAKL_BASE_URL}}/api/values_lists/imports
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  file: @file(C:\Users\gabri\OneDrive\3_Work\Mirakl\TEST-IMPORTS\VL\Test-Example-1.txt) @contentType(text/plain; charset=utf-8)
+}
+
+script:post-response {
+  const json = res.body;
+  
+  if (json && json.values_lists_import_id) {
+    const id = json.values_lists_import_id;
+  
+    bru.setVar("VL_IMPORT_ID", id);
+    console.log("VL_IMPORT_ID captured:", id);
+  } else {
+    console.log("VL01 response did not contain values_lists_import_id");
+  }
+  
+}
+
+tests {
+  assert(res.status === 201);
+  assert(res.body.values_lists_import_id !== undefined);
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
