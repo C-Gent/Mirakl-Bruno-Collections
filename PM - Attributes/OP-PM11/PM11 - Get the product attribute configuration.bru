@@ -1,0 +1,15 @@
+meta {
+  name: PM11 - Get the product attribute configuration
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{MIRAKL_BASE_URL}}/api/products/attributes
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

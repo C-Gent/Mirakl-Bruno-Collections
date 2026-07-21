@@ -1,0 +1,25 @@
+meta {
+  name: VL11 - Get information about operator's value lists
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{MIRAKL_BASE_URL}}/api/values_lists
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~code: 
+}
+
+tests {
+  assert(res.status === 200);
+  assert(res.body.length > 0);
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
