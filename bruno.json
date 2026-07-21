@@ -1,0 +1,15 @@
+{
+  "version": "1",
+  "name": "Mirakl-API",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ],
+  "size": 0.0037107467651367188,
+  "filesCount": 8,
+  "presets": {
+    "requestType": "http",
+    "requestUrl": ""
+  }
+}
