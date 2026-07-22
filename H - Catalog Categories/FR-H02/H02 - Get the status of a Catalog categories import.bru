@@ -1,0 +1,72 @@
+meta {
+  name: H02 - Get the status of a Catalog categories import
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{MIRAKL_BASE_URL}}/api/hierarchies/imports/{{H_IMPORT_ID}}
+  body: none
+  auth: inherit
+}
+
+script:post-response {
+  const json = res.body;
+  
+  // Extract import ID from the request URL
+  const url = req.url;
+  const importId = url.split("/").pop();
+  
+  if (!json) {
+    console.log("H02: No response body received");
+    return;
+  }
+  
+  console.log("H02 Status:", json.import_status);
+  console.log("H02 Error Report:", json.has_error_report);
+  
+  bru.setVar("H02_STATUS", json.import_status);
+  
+  // COMPLETE + NO ERRORS
+  if (json.import_status === "COMPLETE" && json.has_error_report === false) {
+    console.log("H02: Import completed successfully with no errors.");
+    bru.setVar("H03_IMPORT_ID", "");
+    bru.setVar("H02_HARD_FAILURE", "");
+    return;
+  }
+  
+  // COMPLETE + ERRORS
+  if (json.import_status === "COMPLETE" && json.has_error_report === true) {
+    bru.setVar("H03_IMPORT_ID", importId);
+    console.log("H02: Import completed but contains errors. H03_IMPORT_ID set:", importId);
+    bru.setVar("H02_HARD_FAILURE", "");
+    return;
+  }
+  
+  // FAILED + ERRORS
+  if (json.import_status === "FAILED" && json.has_error_report === true) {
+    bru.setVar("H03_IMPORT_ID", importId);
+    console.log("H02: Import failed with error report. H03_IMPORT_ID set:", importId);
+    bru.setVar("H02_HARD_FAILURE", "");
+    return;
+  }
+  
+  // FAILED + NO ERRORS
+  if (json.import_status === "FAILED" && json.has_error_report === false) {
+    console.log("H02: Import failed with no error report. Hard failure.");
+    bru.setVar("H03_IMPORT_ID", "");
+    bru.setVar("H03_HARD_FAILURE", "true");
+    return;
+  }
+  
+}
+
+tests {
+  assert(res.status === 200);
+  assert(res.body.import_status !== undefined);
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -4,5 +4,17 @@ meta {
 }
 
 auth {
-  mode: inherit
+  mode: bearer
+}
+
+auth:bearer {
+  token: {{MIRAKL_FR_BEARER_TOKEN}}
+}
+
+vars:post-response {
+  H_IMPORT_ID: 
+  H02_STATUS: 
+  H03_IMPORT_ID: 
+  H02_HARD_FAILURE: 
+  H03_ERROR_CSV: 
 }

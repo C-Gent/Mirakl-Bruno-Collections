@@ -1,0 +1,40 @@
+meta {
+  name: H01 - Import a file to add operator's Catalog categories to Mirakl
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{MIRAKL_BASE_URL}}/api/hierarchies/imports
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  file: @file(C:\Users\gabri\OneDrive\3_Work\Mirakl\TEST-IMPORTS\HM\Mirakl_Category_Import_Full.csv) @contentType(text/csv; charset=utf-8)
+  preserve_order: true
+}
+
+script:post-response {
+  const json = res.body;
+  
+  if (json && json.hierarchies_import_id) {
+    const id = json.hierarchies_import_id;
+  
+    bru.setVar("H_IMPORT_ID", id);
+    console.log("H_IMPORT_ID captured:", id);
+  } else {
+    console.log("H01 response did not contain hierarchies_import_id");
+  }
+  
+}
+
+tests {
+  assert(res.status === 201);
+  assert(res.body.hierarchies_import_id !== undefined);
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
