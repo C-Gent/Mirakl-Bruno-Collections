@@ -1,0 +1,32 @@
+meta {
+  name: H11 - List Catalog categories (parents and children) related to a Catalog category
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{MIRAKL_BASE_URL}}/api/hierarchies
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~hierarchy: 
+  ~max_level: 
+}
+
+script:post-response {
+  const json = res.body;
+  
+  if (!json) {
+    console.log("H11: No response body received");
+    return;
+  }
+  
+  console.log("H11: Response successful.")
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

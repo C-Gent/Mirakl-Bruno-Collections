@@ -1,0 +1,39 @@
+meta {
+  name: PM01 - Import operator attributes to Mirakl
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{MIRAKL_BASE_URL}}/api/products/attributes/imports
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  file: 
+}
+
+script:post-response {
+  const json = res.body;
+  
+  if (json && json.attributes_import_id) {
+    const id = json.attributes_import_id;
+  
+    bru.setVar("PM_IMPORT_ID", id);
+    console.log("PM_IMPORT_ID captured:", id);
+  } else {
+    console.log("PM01 response did not contain attributes_import_id");
+  }
+  
+}
+
+tests {
+  assert(res.status === 201);
+  assert(res.body.attributes_import_id !== undefined);
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

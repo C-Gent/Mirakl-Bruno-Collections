@@ -1,0 +1,21 @@
+meta {
+  name: PM03 - Get the error report file for an operator attributes import
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{MIRAKL_BASE_URL}}/api/products/attributes/imports/{{PM03_IMPORT_ID}}/error_report
+  body: none
+  auth: inherit
+}
+
+tests {
+  assert(res.status === 200);
+  assert(res.body.length > 0);
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
